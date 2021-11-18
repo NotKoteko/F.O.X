@@ -46,11 +46,11 @@ class Entity(WorldObject):
     def update(self, world, time):
         super().update(world, time)
         self.move_inertia(world, time)  # Движение по инерции
-        self.update_speed(time)
+        self.update_speed(world, time)
 
-    def update_speed(self, time):
+    def update_speed(self, world, time):
         for i in range(len(self.speed)):
-            self.speed[i] = int(self.speed[i] - (self.max_speed / 100 * 1000) * (time / 1000))
+            self.speed[i] = self.speed[i] - (self.max_speed * 10) * (time / 1000)
             if self.speed[i] < 1:
                 self.speed[i] = 0
 

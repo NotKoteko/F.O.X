@@ -14,6 +14,7 @@ class Fox(Player):
         self.direction = 3          # Устанавливаем направление взгляда на "вправо"
 
         self.is_shifting = False
+        self.shifting_time = 0
 
         # Грузит текстуры idle и walk от 1 до 8 (увеличить, если кадров больше)
         for i in range(8):          # Грузим текстуры idle и walk от 1 до 8
@@ -59,18 +60,23 @@ class Fox(Player):
 
     def update(self, world, time):
         super().update(world, time)
+        if self.is_shifting:
+            self.shifting_time += time
+            if self.shifting_time > 200:
+                self.stop_shifting(world)
 
-    def shift(self, world):
+    def start_shifting(self, world):
         self.speed[self.direction] = self.max_speed * 5
         self.is_shifting = True
 
-    def update_speed(self, time):
-        for i in range(len(self.speed)):
-            self.speed[i] = int(self.speed[i] - (self.max_speed / 100 * 1000) * (time / 1000))
-            if self.speed[i] < 1:
-                self.speed[i] = 0
-        if sum(self.speed) == 0:
-            self.is_shifting = False
+    def stop_shifting(self, world):
+        self.speed[self.direction] = self.max_speed
+        self.is_shifting = False
+        self.shifting_time = 0
+
+    def update_speed(self, world, time):
+        if not self.is_shifting:
+            super().update_speed(world, time)
 
 
 class Tree(WorldObject):

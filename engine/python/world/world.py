@@ -37,8 +37,8 @@ class World:
         if player:
             player.update_direction(pressed_keys[pygame.K_w], pressed_keys[pygame.K_a],
                                     pressed_keys[pygame.K_s], pressed_keys[pygame.K_d])
-            player.speed[0] = player.max_speed * 0.8 if pressed_keys[pygame.K_w] else player.speed[0]
-            player.speed[2] = player.max_speed * 0.8 if pressed_keys[pygame.K_s] else player.speed[2]
+            player.speed[0] = player.max_speed if pressed_keys[pygame.K_w] else player.speed[0]
+            player.speed[2] = player.max_speed if pressed_keys[pygame.K_s] else player.speed[2]
             player.speed[1] = player.max_speed if pressed_keys[pygame.K_a] else player.speed[1]
             player.speed[3] = player.max_speed if pressed_keys[pygame.K_d] else player.speed[3]
 

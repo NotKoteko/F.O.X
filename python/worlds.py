@@ -30,10 +30,11 @@ class RandomGeneratedWorld(World):
     def update(self, time, events, pressed_keys):
         super().update(time, events, pressed_keys)
         player = self.get_player()
-        for event in events:
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LSHIFT:
-                    player.shift(self)
+        if isinstance(player, Fox):
+            for event in events:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_LSHIFT:
+                        player.start_shifting(self)
 
 
 class Menu(World):
