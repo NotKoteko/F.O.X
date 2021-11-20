@@ -9,12 +9,13 @@ class Fox(Player):
     def __init__(self, world):
         super().__init__(world)     # Всё то же самое, что у LivingEntity
 
-        self.set_size(1, 1, 48)
+        self.rect.set_size(1, 1, 48)
         self.max_speed = 300        # Устанавливаем максимальную скорость на 300 пикселей/секунда
         self.direction = 3          # Устанавливаем направление взгляда на "вправо"
 
         self.is_shifting = False
-        self.shifting_time = 0
+        self.shifting_time_start = 0
+        self.shifting_time_end = 0
 
         # Грузит текстуры idle и walk от 1 до 8 (увеличить, если кадров больше)
         for i in range(8):          # Грузим текстуры idle и walk от 1 до 8
@@ -55,24 +56,22 @@ class Fox(Player):
 
     def move(self, world, x, y):
         super().move(world, x, y)
-        world.cam_x -= x
-        world.cam_y -= y
 
     def update(self, world, time):
         super().update(world, time)
         if self.is_shifting:
-            self.shifting_time += time
-            if self.shifting_time > 200:
+            if self.exist_time - self.shifting_time_start > 150:
                 self.stop_shifting(world)
 
     def start_shifting(self, world):
         self.speed[self.direction] = self.max_speed * 5
         self.is_shifting = True
+        self.shifting_time_start = self.exist_time
 
     def stop_shifting(self, world):
         self.speed[self.direction] = self.max_speed
         self.is_shifting = False
-        self.shifting_time = 0
+        self.shifting_time_end = self.exist_time
 
     def update_speed(self, world, time):
         if not self.is_shifting:
@@ -80,12 +79,23 @@ class Fox(Player):
 
 
 class Tree(WorldObject):
-    def __init__(self, group):
-        super().__init__(group)
-        self.add_texture("tree", load_image("tree"))
-        self.set_texture("tree")
+    def __init__(self, world):
+        super().__init__(world)
+        self.rect.set_size(48, 24)
 
     def get_texture_rect(self):
         size = 96, 144
         return Rect(self.rect.x - (size[0] - self.rect.width) // 2,
-                    self.rect.y - (size[1] - self.rect.height), size[0], size[1])
+                    self.rect.y - (size[1] - self.rect.height - 16), size[0], size[1])
+
+
+class Bush(WorldObject):
+    def __init__(self, world):
+        super().__init__(world)
+        self.rect.set_size(24, 24)
+        self.has_collision = False
+
+    def get_texture_rect(self):
+        size = 96, 96
+        return Rect(self.rect.x - (size[0] - self.rect.width) // 2,
+                    self.rect.y - (size[1] - self.rect.height + -16), size[0], size[1])

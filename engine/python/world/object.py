@@ -18,24 +18,17 @@ class WorldObject:
         self.has_collision = True
         self.is_visible = True
 
-    def set_pos(self, x, y, multiplier):
-        self.rect = Rect(x * multiplier, y * multiplier, self.rect.width, self.rect.height)
-
-    def set_size(self, width, height, multiplier):
-        self.rect = Rect(self.rect.x, self.rect.y, width * multiplier, height * multiplier)
-
     # Передвинуть объект
     def move(self, world, x, y):
         self.rect = self.rect.move(x, y)
-        # self.rect.set_pos(self.rect.x + x, self.rect.y + y)
 
     # Проверить, может ли объект передвинуться в указанное место
     def can_move_to(self, world, x, y):
         if not self.has_collision:
             return True
         rect = Rect(x, y, self.rect.width, self.rect.height)
-        collide_after = [other for other in world if other != self
-                         if rect.collide_rect(other.rect) and not self.rect.collide_rect(other.rect)]
+        collide_after = [other for other in world if other != self and other.has_collision
+                         and rect.collide_rect(other.rect) and not self.rect.collide_rect(other.rect)]
         return collide_after == []
 
     # Добавить новую текстуру в список
@@ -61,3 +54,7 @@ class WorldObject:
     # Вызывается каждый кадр для обновления объекта
     def update(self, world, time):
         self.exist_time += time  # Увеличиваем время существования
+
+    def kill(self, world):
+        del world.obj_dict[self]
+

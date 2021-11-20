@@ -54,13 +54,5 @@ def get_screen_size():
     return windll.user32.GetSystemMetrics(0), windll.user32.GetSystemMetrics(1)
 
 
-def get_centered_pos(screen_size, window_size):
-    return (screen_size[0] - window_size[0]) // 2, (screen_size[1] - window_size[1]) // 2
-
-
-def set_fullscreen(is_full, fullscreen_size, windowed_size):
-    hwnd = pygame.display.get_wm_info()['window']
-    x, y = (0, 0) if is_full else get_centered_pos(fullscreen_size, windowed_size)
-    w, h = fullscreen_size if is_full else windowed_size
-    pygame.display.set_mode((w, h), pygame.NOFRAME)
-    windll.user32.MoveWindow(hwnd, x, y, w, h, False)
+def get_centered_pos(size_bigger, size_smaller):
+    return (size_bigger[0] - size_smaller[0]) // 2, (size_bigger[1] - size_smaller[1]) // 2
