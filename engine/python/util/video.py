@@ -39,7 +39,7 @@ def add_color_filter(image, color):
 def draw_world(surface, world):
     surface.fill(world.background_color)
     player = world.get_player()
-    for obj in world:
+    for obj in sorted([o for o in world], key=lambda _: _.rect.y):
         rect = obj.get_texture_rect()
         image = scale_image(obj.get_texture(), rect.width, rect.height)
         if player:

@@ -40,6 +40,9 @@ class Rect:
     def collide_point(self, point) -> bool:
         return self.x < point[0] < self.x + self.width and self.y < point[1] < self.y + self.height
 
+    def collide_any(self, world):
+        return [obj for obj in world if self.collide_rect(obj.rect) and obj != self]
+
     def move(self, x, y):
         return Rect(self.x + x, self.y + y, self.width, self.height)
 
