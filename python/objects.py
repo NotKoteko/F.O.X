@@ -1,5 +1,6 @@
 from engine.python.util.rect import Rect
 from engine.python.util.video import scale_image, load_image, flip_image, add_color_filter
+from engine.python.world.entity_living import EntityLiving
 from engine.python.world.object import WorldObject
 from engine.python.world.player import Player
 
@@ -12,10 +13,6 @@ class Fox(Player):
         self.rect.set_size(1, 1, 48)
         self.max_speed = 300        # Устанавливаем максимальную скорость на 300 пикселей/секунда
         self.direction = 3          # Устанавливаем направление взгляда на "вправо"
-
-        self.is_shifting = False
-        self.shifting_time_start = 0
-        self.shifting_time_end = 0
 
         # Грузит текстуры idle и walk от 1 до 8 (увеличить, если кадров больше)
         for i in range(8):          # Грузим текстуры idle и walk от 1 до 8
@@ -56,26 +53,8 @@ class Fox(Player):
 
     def move(self, world, x, y):
         super().move(world, x, y)
-
-    def update(self, world, time):
-        super().update(world, time)
-        if self.is_shifting:
-            if self.exist_time - self.shifting_time_start > 150:
-                self.stop_shifting(world)
-
-    def start_shifting(self, world):
-        self.speed[self.direction] = self.max_speed * 5
-        self.is_shifting = True
-        self.shifting_time_start = self.exist_time
-
-    def stop_shifting(self, world):
-        self.speed[self.direction] = self.max_speed
-        self.is_shifting = False
-        self.shifting_time_end = self.exist_time
-
-    def update_speed(self, world, time):
-        if not self.is_shifting:
-            super().update_speed(world, time)
+        world.cam_x -= x
+        world.cam_y -= y
 
 
 class Tree(WorldObject):
@@ -93,9 +72,59 @@ class Bush(WorldObject):
     def __init__(self, world):
         super().__init__(world)
         self.rect.set_size(24, 24)
-        self.has_collision = False
+        self.has_collision = True
 
     def get_texture_rect(self):
         size = 96, 96
         return Rect(self.rect.x - (size[0] - self.rect.width) // 2,
                     self.rect.y - (size[1] - self.rect.height + -16), size[0], size[1])
+
+
+class MenuBackground(WorldObject):
+    def __init__(self, world):
+        super().__init__(world)
+        for i in range(1, 68):
+            self.add_texture(f"mm_{i}", load_image(f"menu/mm_{i}"))
+            self.rect.set_pos(0, 0)
+            self.rect.set_size(1920, 1080)
+
+    def get_texture(self):
+        if self.exist_time < 67 * 20:
+            texture_number = self.exist_time // 20 % 67
+        else:
+            texture_number = 66 if self.exist_time // 500 % 2 == 0 else 67
+        texture = self.textures.get(f"mm_{texture_number}", self.textures["default"])
+        return texture
+
+    def get_texture_rect(self):
+        return Rect(0, 0, 1920, 1080)
+
+
+class FireBall(EntityLiving):
+    def __init__(self, world):
+        super().__init__(world)
+        self.max_speed = 100
+        self.direction = 1
+        self.has_collision = False
+        self.add_texture("fireball", load_image("fireball_enemy"))
+        self.set_texture("fireball")
+
+    def update(self, world, time):
+        super().update(world, time)
+        player = world.get_player()
+        dist_x = int(self.rect.x - player.rect.x)
+        dist_y = int(self.rect.y - player.rect.y)
+        if self.rect.collide_rect(player.rect) and self.exist_time % 100 == 0:
+            self.attack(world, player, 1)
+        elif dist_x == 0 and abs(dist_y) < 300:
+            self.direction = 0 if dist_y > 0 else 2
+            self.start_shifting(world)
+        elif dist_y == 0 and abs(dist_x) < 300:
+            self.direction = 1 if dist_x > 0 else 3
+            self.start_shifting(world)
+        else:
+            self.speed[0] = self.max_speed if dist_y > 1 else 0
+            self.speed[1] = self.max_speed if dist_x > 1 else 0
+            self.speed[2] = self.max_speed if dist_y < -1 else 0
+            self.speed[3] = self.max_speed if dist_x < -1 else 0
+

@@ -1,11 +1,13 @@
 import random
+import sys
+
 import pygame
 
 from engine.python.util.rect import Rect
-from engine.python.util.video import load_image, get_screen_size, get_centered_pos
+from engine.python.util.video import load_image, scale_image
 from engine.python.world.object import WorldObject
 from engine.python.world.world import World
-from python.objects import Fox, Tree, Bush
+from python.objects import Fox, Tree, Bush, FireBall, MenuBackground
 
 
 class RandomGeneratedWorld(World):
@@ -13,54 +15,30 @@ class RandomGeneratedWorld(World):
         super().__init__()
         self.load()
         self.background_color = (0, 170, 0)
+        self.world_time = 0
 
-    # Генерируем мир
-    def load(self, filename=None):
-        # Получаем размер экрана
-        screen_size = get_screen_size()
+        self.font = pygame.font.SysFont('calibri', 50, bold=True)
 
-        # Создаём лису по центру экрана
+    def load(self, filename="map1.txt"):
         fox = Fox(self)
-        fox_pos = get_centered_pos(screen_size, fox.rect.get_size())
-        fox.rect.set_pos(fox_pos[0], fox_pos[1])
+        fox.rect.set_pos(936, 516)
+        with open(f"resources/{filename}") as file:
+            for line in file.readlines():
+                if line == "\n" or line == "":
+                    continue
+                info = line.rstrip("\n").split()
 
-        # Задаём размеры клетки, отталкиваясь от них считаем размеры мира (так, чтобы влезли на экран)
-        cell_size = 48
-        cells_x, cells_y = screen_size[0] // cell_size - 1, screen_size[1] // cell_size - 1
-
-        # Генерируем заборы по краям экрана (проходимся двумя циклами по всем клеткам)
-        for y in range(0, cells_y, 2):
-            for x in range(0, cells_x, 2):
-                # Ставим заборы слева (x == 0), справа (x == макс.x), сверху (y == 0) снизу (y == макс.y)
-                if x == 0 or x == cells_x - 1 or y == 0 or y == cells_y - 1:
-                    # Создаём объект, добавляем ему нужные текстуры и устанавливаем позицию.
-                    obj = Bush(self)
-                    obj.add_texture("bush", load_image("bush"))
-                    obj.set_texture("bush")
-                    obj.rect.set_pos(x, y, cell_size)
-                    obj.rect.set_size(2, 2, cell_size)
-                    obj.has_collision = True  # Включаем коллизию
-
-        # Список всех возможных объектов для генерации
-        objects = ["stump" for i in range(30)] + ["tree" for i in range(20)] + ["bush" for i in range(20)]
-        # Создаём 15 рандомных объектов
-        for i in range(15):
-            # Выбираем тип объекта из списка, добавляем текстуры
-            obj_type = random.choice(objects)
-            obj = WorldObject(self) if obj_type == "stump" else Tree(self) if obj_type == "tree" else Bush(self)
-            obj.add_texture(obj_type, load_image(obj_type))
-            obj.set_texture(obj_type)
-
-            # Выбираем рандомные x и y, пока не выберем их так, чтобы объект не касался других объектов
-            x, y = 1, 1
-            rect = Rect(x * cell_size, y * cell_size, cell_size, cell_size)
-            while x % 2 != 0 or y % 2 != 0 or rect.collide_any(self):
-                x, y = random.randint(3, cells_x - 2), random.randint(3, cells_y - 2)
-                rect.set_pos(x * cell_size, y * cell_size)
-            obj.rect = rect
+                obj_type = info[0].split("=")[-1]
+                obj = Tree(self) if obj_type == "tree" else Bush(self) if obj_type == "bush" else WorldObject(self)
+                obj.add_texture(obj_type, load_image(obj_type))
+                obj.set_texture(obj_type)
+                x, y, w, h = int(info[1].split("=")[-1]), int(info[2].split("=")[-1]), \
+                             int(info[3].split("=")[-1]), int(info[4].split("=")[-1])
+                obj.rect = Rect(x, y, w, h)
 
     def update(self, time, events, pressed_keys):
         super().update(time, events, pressed_keys)
+        self.world_time += time
         player = self.get_player()
         if player and isinstance(player, Fox):
             player.update_direction(pressed_keys[pygame.K_w], pressed_keys[pygame.K_a],
@@ -79,29 +57,61 @@ class RandomGeneratedWorld(World):
                         if player.exist_time - player.shifting_time_end > 1500:
                             player.start_shifting(self)
 
+    def draw(self, surface):
+        super().draw(surface)
+        hp = self.get_player().hp
+        color = (0, 255, 0) if hp > 50 else (255, 255, 0) if hp > 25 else (255, 0, 0)
+        surface.blit(self.font.render(f"{self.get_player().hp}", False, color), (10, 30))
+
 
 class Menu(World):
     def __init__(self):
         super().__init__()
         self.name = "Menu"
-        button = WorldObject()
-        button.add_texture("default", load_image("button_start"))
-        button.add_texture("focused", load_image("button_start_focused"))
-        button.set_texture("default")
-        button.rect.set_size(200, 70)
-        pos = get_centered_pos(get_screen_size(), button.rect.get_size())
-        button.rect.set_pos(pos[0], pos[1] - 100)
-        self.add(button)
+
+        MenuBackground(self)
+
+        button_play = WorldObject(self)
+        button_play.add_texture("default", load_image("menu/buttons/play_1"))
+        button_play.add_texture("focused", load_image("menu/buttons/play_2"))
+        button_play.rect.set_pos(500, 800)
+        button_play.rect.set_size(186, 42)
+
+        button_quit = WorldObject(self)
+        button_quit.add_texture("default", load_image("menu/buttons/quit_1"))
+        button_quit.add_texture("focused", load_image("menu/buttons/quit_2"))
+        button_quit.rect.set_pos(500, 860)
+        button_quit.rect.set_size(186, 42)
 
     def update(self, time, events, pressed_keys, *args):
-        button = self.objects()[0]
+        self.objects()[0].update(self, time)
+        self.world_time += time
+        button_play = self.objects()[1]
+        button_quit = self.objects()[2]
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if button.rect.collide_point(event.pos):
+                if button_play.rect.collide_point(event.pos):
                     return RandomGeneratedWorld()
+                elif button_quit.rect.collide_point(event.pos):
+                    sys.exit(0)
             elif event.type == pygame.MOUSEMOTION:
-                if button.rect.collide_point(event.pos):
-                    button.set_texture("focused")
+                if button_play.rect.collide_point(event.pos):
+                    button_play.set_texture("focused")
                 else:
-                    button.set_texture("default")
+                    button_play.set_texture("default")
+
+                if button_quit.rect.collide_point(event.pos):
+                    button_quit.set_texture("focused")
+                else:
+                    button_quit.set_texture("default")
         return self
+
+    def draw(self, surface):
+        surface.fill(self.background_color)
+        for obj in sorted([o for o in self], key=lambda _: _.rect.y):
+            if obj != self.objects()[0]:
+                if self.world_time < 67 * 20:
+                    break
+            rect = obj.get_texture_rect()
+            image = scale_image(obj.get_texture(), rect.width, rect.height)
+            self.obj_dict[obj] = surface.blit(image, (rect.x + self.cam_x, rect.y + self.cam_y))

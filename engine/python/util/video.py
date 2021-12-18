@@ -36,7 +36,7 @@ def add_color_filter(image, color):
     return image
 
 
-def draw_world(surface, world):
+def draw_world(surface, world):  # Сейчас не используется
     surface.fill(world.background_color)
     player = world.get_player()
     for obj in sorted([o for o in world], key=lambda _: _.rect.y):
@@ -47,7 +47,7 @@ def draw_world(surface, world):
                 player_rect = player.get_texture_rect()
                 if rect.collide_rect(player_rect):
                     image.set_alpha(220)
-        world.obj_dict[obj] = surface.blit(image, (rect.x + world.cam_x, rect.y + world.cam_y))
+        world.obj_dict[obj] = surface.blit(image, (rect.x + world.cam_x, rect.y + world.cam_y)) #
 
 
 def get_screen_size():

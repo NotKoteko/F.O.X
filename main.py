@@ -37,7 +37,7 @@ if __name__ == '__main__':
                 if event.key == pygame.K_ESCAPE:                                # ESC, выход из игры
                     running = False
 
-        draw_world(screen, world)                                  # Отрисовываем игровой мир
+        world.draw(screen)                                         # Отрисовываем игровой мир
         upd_res = world.update(time_passed, events, pressed_keys)  # Обновляем мир
 
         if world.name == "Menu":
