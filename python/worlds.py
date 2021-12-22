@@ -7,7 +7,7 @@ from engine.python.util.rect import Rect
 from engine.python.util.video import load_image, scale_image
 from engine.python.world.object import WorldObject
 from engine.python.world.world import World
-from python.objects import Fox, Tree, Bush, FireBall, MenuBackground
+from python.objects import Fox, Tree, Bush, FireBall, MenuBackground, WallBush
 
 
 class RandomGeneratedWorld(World):
@@ -30,16 +30,16 @@ class RandomGeneratedWorld(World):
 
                 obj_type = info[0].split("=")[-1]
                 obj = Tree(self) if obj_type == "tree" else Bush(self) if obj_type == "bush" \
-                    else FireBall(self) if obj_type == "fireball_enemy" else WorldObject(self)
+                    else FireBall(self) if obj_type == "fireball_enemy" else WallBush(self) if obj_type == "wall_bush" \
+                    else WorldObject(self)
                 obj.add_texture(obj_type, load_image(obj_type))
                 obj.set_texture(obj_type)
                 x, y, w, h = int(info[1].split("=")[-1]), int(info[2].split("=")[-1]), \
                              int(info[3].split("=")[-1]), int(info[4].split("=")[-1])
-                if obj_type == "fireball_enemy":
-                    obj.ai_x1, obj.ai_y1, obj.ai_x2, obj.ai_y2 = int(info[6].split("=")[-1]), \
-                                                                 int(info[7].split("=")[-1]), \
-                                                                 int(info[8].split("=")[-1]), \
-                                                                 int(info[9].split("=")[-1])
+                if obj_type in ["fireball_enemy", "wall_bush"]:
+                    x1, y1, x2, y2 = int(info[6].split("=")[-1]), int(info[7].split("=")[-1]),\
+                                     int(info[8].split("=")[-1]), int(info[9].split("=")[-1])
+                    obj.zone_rect = Rect(x1, y1, x2 - x1, y2 - y1)
                 obj.rect = Rect(x, y, w, h)
 
     def update(self, time, events, pressed_keys):
