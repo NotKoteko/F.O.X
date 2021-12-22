@@ -445,3 +445,5 @@ type=wall_bush x=1824 y=1440 w=96 h=96 collision=1 zone_x1=0 zone_y1=1080 zone_x
 # Fourth Room
 
 type=wall_bush x=1824 y=1440 w=96 h=96 collision=1 zone_x1=1920 zone_y1=1080 zone_x2=3840 zone_y2=2160
+
+# xd
