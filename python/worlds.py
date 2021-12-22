@@ -35,6 +35,11 @@ class RandomGeneratedWorld(World):
                 obj.set_texture(obj_type)
                 x, y, w, h = int(info[1].split("=")[-1]), int(info[2].split("=")[-1]), \
                              int(info[3].split("=")[-1]), int(info[4].split("=")[-1])
+                if obj_type == "fireball_enemy":
+                    obj.ai_x1, obj.ai_y1, obj.ai_x2, obj.ai_y2 = int(info[6].split("=")[-1]), \
+                                                                 int(info[7].split("=")[-1]), \
+                                                                 int(info[8].split("=")[-1]), \
+                                                                 int(info[9].split("=")[-1])
                 obj.rect = Rect(x, y, w, h)
 
     def update(self, time, events, pressed_keys):

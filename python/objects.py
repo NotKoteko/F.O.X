@@ -108,23 +108,29 @@ class FireBall(EntityLiving):
         self.has_collision = False
         self.add_texture("fireball", load_image("fireball_enemy"))
         self.set_texture("fireball")
+        self.ai_x1 = 0
+        self.ai_y1 = 0
+        self.ai_x2 = 1920
+        self.ai_y2 = 1080
 
     def update(self, world, time):
         super().update(world, time)
         player = world.get_player()
-        dist_x = int(self.rect.x - player.rect.x)
-        dist_y = int(self.rect.y - player.rect.y)
-        if self.rect.collide_rect(player.rect) and self.exist_time % 100 == 0:
-            self.attack(world, player, 1)
-        elif dist_x == 0 and abs(dist_y) < 300:
-            self.direction = 0 if dist_y > 0 else 2
-            self.start_shifting(world)
-        elif dist_y == 0 and abs(dist_x) < 300:
-            self.direction = 1 if dist_x > 0 else 3
-            self.start_shifting(world)
-        else:
-            self.speed[0] = self.max_speed if dist_y > 1 else 0
-            self.speed[1] = self.max_speed if dist_x > 1 else 0
-            self.speed[2] = self.max_speed if dist_y < -1 else 0
-            self.speed[3] = self.max_speed if dist_x < -1 else 0
+        if self.ai_x1 < player.rect.x < player.rect.x + player.rect.width < self.ai_x2:
+            if self.ai_y1 < player.rect.y < player.rect.y + player.rect.height < self.ai_y2:
+                dist_x = int(self.rect.x - player.rect.x)
+                dist_y = int(self.rect.y - player.rect.y)
+                if self.rect.collide_rect(player.rect) and self.exist_time % 100 == 0:
+                    self.attack(world, player, 1)
+                elif dist_x == 0 and abs(dist_y) < 300:
+                    self.direction = 0 if dist_y > 0 else 2
+                    self.start_shifting(world)
+                elif dist_y == 0 and abs(dist_x) < 300:
+                    self.direction = 1 if dist_x > 0 else 3
+                    self.start_shifting(world)
+                else:
+                    self.speed[0] = self.max_speed if dist_y > 1 else 0
+                    self.speed[1] = self.max_speed if dist_x > 1 else 0
+                    self.speed[2] = self.max_speed if dist_y < -1 else 0
+                    self.speed[3] = self.max_speed if dist_x < -1 else 0
 
