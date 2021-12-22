@@ -32,8 +32,9 @@ class RandomGeneratedWorld(World):
                 obj = Tree(self) if obj_type == "tree" else Bush(self) if obj_type == "bush" \
                     else FireBall(self) if obj_type == "fireball_enemy" else WallBush(self) if obj_type == "wall_bush" \
                     else WorldObject(self)
-                obj.add_texture(obj_type, load_image(obj_type))
-                obj.set_texture(obj_type)
+                if obj_type != "wall_bush":
+                    obj.add_texture(obj_type, load_image(obj_type))
+                    obj.set_texture(obj_type)
                 x, y, w, h = int(info[1].split("=")[-1]), int(info[2].split("=")[-1]), \
                              int(info[3].split("=")[-1]), int(info[4].split("=")[-1])
                 if obj_type in ["fireball_enemy", "wall_bush"]:

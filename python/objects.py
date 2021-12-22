@@ -73,6 +73,8 @@ class Bush(WorldObject):
         super().__init__(world)
         self.rect.set_size(24, 24)
         self.has_collision = True
+        self.add_texture("bush", load_image("bush"))
+        self.set_texture("bush")
 
     def get_texture_rect(self):
         size = 96, 96
@@ -144,5 +146,7 @@ class WallBush(Bush):
                 if isinstance(obj, FireBall):
                     if obj.rect.collide_rect(self.zone_rect):
                         self.has_collision = True
+                        self.is_visible = True
                         return
         self.has_collision = False
+        self.is_visible = False

@@ -43,6 +43,8 @@ class World:
         surface.fill(self.background_color)
         player = self.get_player()
         for obj in sorted([o for o in self], key=lambda _: _.rect.y):
+            if not obj.is_visible:
+                continue
             rect = obj.get_texture_rect()
             image = scale_image(obj.get_texture(), rect.width, rect.height)
             if player:
