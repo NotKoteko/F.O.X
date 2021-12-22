@@ -424,4 +424,8 @@ type=stump x=3426 y=2655 w=48 h=48 collision=1
 # Enemies
 # Second Room
 
-type=fireball_enemy x=-285 y=369 w=48 h=48 collision=0
+type=fireball_enemy x=-285 y=369 w=48 h=48 collision=0 ai_x1=-1824 ai_y1=96 ai_x2=0 ai_y2=984
+type=fireball_enemy x=-260 y=257 w=48 h=48 collision=0 ai_x1=-1824 ai_y1=96 ai_x2=0 ai_y2=984
+type=fireball_enemy x=-1214 y=455 w=48 h=48 collision=0 ai_x1=-1824 ai_y1=96 ai_x2=0 ai_y2=984
+type=fireball_enemy x=-477 y=945 w=48 h=48 collision=0 ai_x1=-1824 ai_y1=96 ai_x2=0 ai_y2=984
+type=fireball_enemy x=-1161 y=469 w=48 h=48 collision=0 ai_x1=-1824 ai_y1=96 ai_x2=0 ai_y2=984
