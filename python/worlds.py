@@ -14,7 +14,7 @@ class RandomGeneratedWorld(World):
     def __init__(self):
         super().__init__()
         self.load()
-        self.background_color = (0, 170, 0)
+        self.background_color = (87, 153, 0)
         self.world_time = 0
 
         self.font = pygame.font.SysFont('calibri', 50, bold=True)
@@ -24,7 +24,7 @@ class RandomGeneratedWorld(World):
         fox.rect.set_pos(936, 516)
         with open(f"resources/{filename}") as file:
             for line in file.readlines():
-                if line == "\n" or line == "":
+                if line == "\n" or line == "" or line.startswith("#"):
                     continue
                 info = line.rstrip("\n").split()
 
