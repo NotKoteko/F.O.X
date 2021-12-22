@@ -31,7 +31,8 @@ type=bush x=480 y=960 w=96 h=96 collision=1
 type=bush x=576 y=960 w=96 h=96 collision=1
 type=bush x=672 y=960 w=96 h=96 collision=1
 type=bush x=768 y=960 w=96 h=96 collision=1
-
+# 864
+# 960
 type=bush x=1056 y=960 w=96 h=96 collision=1
 type=bush x=1152 y=960 w=96 h=96 collision=1
 type=bush x=1248 y=960 w=96 h=96 collision=1
@@ -431,3 +432,16 @@ type=fireball_enemy x=-477 y=945 w=48 h=48 collision=0 ai_x1=-1824 ai_y1=96 ai_x
 type=fireball_enemy x=-1161 y=469 w=48 h=48 collision=0 ai_x1=-1824 ai_y1=96 ai_x2=0 ai_y2=984
 
 type=wall_bush x=0 y=480 w=96 h=96 collision=1 zone_x1=-1824 zone_y1=96 zone_x2=0 zone_y2=984
+
+# Third Room
+
+type=fireball_enemy x=864 y=1200 w=48 h=48 collision=0 ai_x1=0 ai_y1=1080 ai_x2=1920 ai_y2=2160
+
+type=wall_bush x=864 y=960 w=96 h=96 collision=1 zone_x1=0 zone_y1=1080 zone_x2=1920 zone_y2=2160
+type=wall_bush x=960 y=960 w=96 h=96 collision=1 zone_x1=0 zone_y1=1080 zone_x2=1920 zone_y2=2160
+
+type=wall_bush x=1824 y=1440 w=96 h=96 collision=1 zone_x1=0 zone_y1=1080 zone_x2=1920 zone_y2=2160
+
+# Fourth Room
+
+type=wall_bush x=1824 y=1440 w=96 h=96 collision=1 zone_x1=1920 zone_y1=1080 zone_x2=3840 zone_y2=2160
