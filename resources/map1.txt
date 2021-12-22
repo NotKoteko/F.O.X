@@ -47,7 +47,7 @@ type=bush x=0 y=96 w=96 h=96 collision=1
 type=bush x=0 y=192 w=96 h=96 collision=1
 type=bush x=0 y=288 w=96 h=96 collision=1
 type=bush x=0 y=384 w=96 h=96 collision=1
-
+#  0 480
 type=bush x=0 y=576 w=96 h=96 collision=1
 type=bush x=0 y=672 w=96 h=96 collision=1
 type=bush x=0 y=768 w=96 h=96 collision=1
@@ -429,3 +429,5 @@ type=fireball_enemy x=-260 y=257 w=48 h=48 collision=0 ai_x1=-1824 ai_y1=96 ai_x
 type=fireball_enemy x=-1214 y=455 w=48 h=48 collision=0 ai_x1=-1824 ai_y1=96 ai_x2=0 ai_y2=984
 type=fireball_enemy x=-477 y=945 w=48 h=48 collision=0 ai_x1=-1824 ai_y1=96 ai_x2=0 ai_y2=984
 type=fireball_enemy x=-1161 y=469 w=48 h=48 collision=0 ai_x1=-1824 ai_y1=96 ai_x2=0 ai_y2=984
+
+type=wall_bush x=0 y=480 w=96 h=96 zone_x1=-1824 zone_y1=96 zone_x2=0 zone_y2=984
