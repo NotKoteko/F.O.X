@@ -147,6 +147,11 @@ class FireBall(EntityLiving):
                 self.speed[2] = self.max_speed if dist_y < -1 else 0
                 self.speed[3] = self.max_speed if dist_x < -1 else 0
 
+    def can_move_to(self, world, x, y):
+        for obj in world:
+            if isinstance(obj, FireBall):
+                if self.rect.collide_rect(obj.rect):
+                    return False
 
 class WallBush(Bush):
     def __init__(self, world):
