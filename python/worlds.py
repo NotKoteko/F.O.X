@@ -15,7 +15,7 @@ class RandomGeneratedWorld(World):
     def __init__(self):
         super().__init__()
         self.load()
-        self.background_color = (87, 153, 0)
+        self.background_color = (25, 86, 55)
         self.world_time = 0
 
         self.font = pygame.font.SysFont('calibri', 50, bold=True)
