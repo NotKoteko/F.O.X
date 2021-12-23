@@ -65,8 +65,10 @@ class RandomGeneratedWorld(World):
             for obj in self:
                 if isinstance(obj, EntityLiving):
                     if obj.hp <= 0:
-                        if obj == player or isinstance(obj, FireBoss):
+                        if obj == player:
                             return GameOverWorld()
+                        if isinstance(obj, FireBoss):
+                            return GameEndWorld()
                         obj.kill(self)
         return self
 
@@ -136,6 +138,22 @@ class GameOverWorld(World):
         self.name = "GameOver"
         background = WorldObject(self)
         background.add_texture("background", load_image("Game_Over"))
+        background.set_texture("background")
+        background.rect = Rect(0, 0, 1920, 1080)
+
+    def update(self, time, events, pressed_keys):
+        self.world_time += time
+        if self.world_time > 5000:
+            sys.exit(0)
+        return self
+
+
+class GameEndWorld(World):
+    def __init__(self):
+        super().__init__()
+        self.name = "GameOver"
+        background = WorldObject(self)
+        background.add_texture("background", load_image("end"))
         background.set_texture("background")
         background.rect = Rect(0, 0, 1920, 1080)
 
