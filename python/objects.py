@@ -150,8 +150,11 @@ class FireBall(EntityLiving):
     def can_move_to(self, world, x, y):
         for obj in world:
             if isinstance(obj, FireBall):
-                if self.rect.collide_rect(obj.rect):
-                    return False
+                if not self.rect.collide_rect(obj.rect):
+                    if Rect(self.rect.x + x, self.rect.y + y, self.rect.width, self.rect.height).collide_rect(obj.rect):
+                        return False
+        return True
+
 
 class WallBush(Bush):
     def __init__(self, world):
