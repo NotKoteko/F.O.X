@@ -1,5 +1,3 @@
-import sys
-
 from engine.python.util.rect import Rect
 from engine.python.util.video import scale_image, load_image, flip_image, add_color_filter
 from engine.python.world.entity_living import EntityLiving
