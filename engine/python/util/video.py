@@ -22,6 +22,17 @@ def flip_image(image, flip_x, flip_y):
     return pygame.transform.flip(image, flip_x, flip_y)
 
 
+def negative(image):
+    image = image.copy()
+    size = image.get_size()
+    for y in range(size[1]):
+        for x in range(size[0]):
+            color_at = image.get_at((x, y))
+            negative_color = [255 - color_at[x] for x in range(3)] + [color_at[3]]
+            image.set_at((x, y), negative_color)
+    return image
+
+
 def add_color_filter(image, color):
     image = image.copy()
     size = image.get_size()

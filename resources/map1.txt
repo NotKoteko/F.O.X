@@ -449,4 +449,13 @@ type=fireball_enemy x=3516 y=1937 w=48 h=48 collision=0 ai_x1=1920 ai_y1=1080 ai
 type=fireball_enemy x=2436 y=1830 w=48 h=48 collision=0 ai_x1=1920 ai_y1=1080 ai_x2=3840 ai_y2=2160
 type=fireball_enemy x=2384 y=1237 w=48 h=48 collision=0 ai_x1=1920 ai_y1=1080 ai_x2=3840 ai_y2=2160
 
+# Fifth Room
+
+type=fireball_enemy x=3761 y=961 w=48 h=48 collision=0 ai_x1=1920 ai_y1=0 ai_x2=3840 ai_y2=1080
+type=fireball_enemy x=2780 y=669 w=48 h=48 collision=0 ai_x1=1920 ai_y1=0 ai_x2=3840 ai_y2=1080
+type=fireball_enemy x=2011 y=146 w=48 h=48 collision=0 ai_x1=1920 ai_y1=0 ai_x2=3840 ai_y2=1080
+
+# Boss Room
+type=fireball_boss x=2880 y=2700 w=96 h=96 collision=0 ai_x1=1920 ai_y1=2160 ai_x2=3840 ai_y2=3240
+
 # xd

@@ -1,5 +1,5 @@
 from engine.python.util.rect import Rect
-from engine.python.util.video import scale_image, load_image, flip_image, add_color_filter
+from engine.python.util.video import scale_image, load_image, flip_image, add_color_filter, negative
 from engine.python.world.entity_living import EntityLiving
 from engine.python.world.object import WorldObject
 from engine.python.world.player import Player
@@ -73,11 +73,21 @@ class Tree(WorldObject):
     def __init__(self, world):
         super().__init__(world)
         self.rect.set_size(48, 24)
+        self.add_texture("tree", load_image("tree"))
+        self.set_texture("tree")
 
     def get_texture_rect(self):
         size = 96, 144
         return Rect(self.rect.x - (size[0] - self.rect.width) // 2,
                     self.rect.y - (size[1] - self.rect.height - 16), size[0], size[1])
+
+
+class Stump(WorldObject):
+    def __init__(self, world):
+        super().__init__(world)
+        self.rect.set_size(48, 48)
+        self.add_texture("stump", load_image("stump"))
+        self.set_texture("stump")
 
 
 class Bush(WorldObject):
@@ -149,7 +159,7 @@ class FireBall(EntityLiving):
         for obj in world:
             if isinstance(obj, FireBall):
                 if not self.rect.collide_rect(obj.rect):
-                    if Rect(self.rect.x + x, self.rect.y + y, self.rect.width, self.rect.height).collide_rect(obj.rect):
+                    if Rect(x, y, self.rect.width, self.rect.height).collide_rect(obj.rect):
                         return False
         return True
 
@@ -176,7 +186,13 @@ class WallBush(Bush):
 class FireBoss(FireBall):
     def __init__(self, world):
         super().__init__(world)
-        self.hp = 1000
+        self.hp = 500
+        self.add_texture("boss", negative(load_image("fireball_enemy")))
+        self.set_texture("boss")
 
     def attack(self, world, target, damage):
         super().attack(world, target, damage * 2)
+
+    def get_texture_rect(self):
+        size = 96, 96
+        return Rect(self.rect.x, self.rect.y - 48, size[0], size[1])
