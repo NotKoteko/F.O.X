@@ -134,7 +134,7 @@ class FireBall(EntityLiving):
             dist_y = int(self.rect.y - player.rect.y)
             if self.rect.collide_rect(player.rect):
                 if world.world_time - self.last_attack_time > 1000:
-                    self.attack(world, player, 30)
+                    self.attack(world, player, 15)
             elif dist_x == 0 and abs(dist_y) < 300:
                 self.direction = 0 if dist_y > 0 else 2
                 self.start_shifting(world)
