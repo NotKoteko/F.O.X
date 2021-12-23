@@ -1,3 +1,5 @@
+import sys
+
 from engine.python.util.rect import Rect
 from engine.python.util.video import scale_image, load_image, flip_image, add_color_filter
 from engine.python.world.entity_living import EntityLiving
@@ -55,6 +57,18 @@ class Fox(Player):
         super().move(world, x, y)
         world.cam_x -= x
         world.cam_y -= y
+
+    def update(self, world, time):
+        super().update(world, time)
+        if self.is_shifting:
+            for obj in world:
+                if isinstance(obj, FireBall) and self.rect.collide_rect(obj.rect):
+                    if world.world_time - self.last_attack_time > 1000:
+                        self.attack(world, obj, 40)
+
+    def get_damage(self, world, damage):
+        if not self.is_shifting:
+            super().get_damage(world, damage)
 
 
 class Tree(WorldObject):
@@ -118,8 +132,9 @@ class FireBall(EntityLiving):
         if player.rect.collide_rect(self.zone_rect):
             dist_x = int(self.rect.x - player.rect.x)
             dist_y = int(self.rect.y - player.rect.y)
-            if self.rect.collide_rect(player.rect) and self.exist_time % 100 == 0:
-                self.attack(world, player, 1)
+            if self.rect.collide_rect(player.rect):
+                if world.world_time - self.last_attack_time > 1000:
+                    self.attack(world, player, 30)
             elif dist_x == 0 and abs(dist_y) < 300:
                 self.direction = 0 if dist_y > 0 else 2
                 self.start_shifting(world)
@@ -150,3 +165,12 @@ class WallBush(Bush):
                         return
         self.has_collision = False
         self.is_visible = False
+
+
+class FireBoss(FireBall):
+    def __init__(self, world):
+        super().__init__(world)
+        self.hp = 1000
+
+    def attack(self, world, target, damage):
+        super().attack(world, target, damage * 2)

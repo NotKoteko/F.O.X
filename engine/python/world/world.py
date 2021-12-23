@@ -2,6 +2,7 @@ from typing import Iterable
 import pygame
 
 from engine.python.util.video import scale_image
+from engine.python.world.entity_living import EntityLiving
 from engine.python.world.object import WorldObject
 from engine.python.world.player import Player
 
@@ -38,6 +39,7 @@ class World:
         self.world_time += time
         for obj in self:
             obj.update(self, time)
+        return self
 
     def draw(self, surface):
         surface.fill(self.background_color)

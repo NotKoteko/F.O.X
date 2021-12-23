@@ -5,6 +5,7 @@ import pygame
 
 from engine.python.util.rect import Rect
 from engine.python.util.video import load_image, scale_image
+from engine.python.world.entity_living import EntityLiving
 from engine.python.world.object import WorldObject
 from engine.python.world.world import World
 from python.objects import Fox, Tree, Bush, FireBall, MenuBackground, WallBush
@@ -63,6 +64,13 @@ class RandomGeneratedWorld(World):
                     if event.key == pygame.K_LSHIFT:
                         if player.exist_time - player.shifting_time_end > 1500:
                             player.start_shifting(self)
+            for obj in self:
+                if isinstance(obj, EntityLiving):
+                    if obj.hp <= 0:
+                        if obj == player:
+                            return GameOverWorld()
+                        obj.kill(self)
+        return self
 
     def draw(self, surface):
         super().draw(surface)
@@ -122,3 +130,19 @@ class Menu(World):
             rect = obj.get_texture_rect()
             image = scale_image(obj.get_texture(), rect.width, rect.height)
             self.obj_dict[obj] = surface.blit(image, (rect.x + self.cam_x, rect.y + self.cam_y))
+
+
+class GameOverWorld(World):
+    def __init__(self):
+        super().__init__()
+        self.name = "GameOver"
+        background = WorldObject(self)
+        background.add_texture("background", load_image("Game_Over"))
+        background.set_texture("background")
+        background.rect = Rect(0, 0, 1920, 1080)
+
+    def update(self, time, events, pressed_keys):
+        self.world_time += time
+        if self.world_time > 5000:
+            sys.exit(0)
+        return self

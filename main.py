@@ -38,12 +38,9 @@ if __name__ == '__main__':
                     running = False
 
         world.draw(screen)                                         # Отрисовываем игровой мир
-        upd_res = world.update(time_passed, events, pressed_keys)  # Обновляем мир
+        world = world.update(time_passed, events, pressed_keys)    # Обновляем мир
 
-        if world.name == "Menu":
-            world = upd_res
-            fox = world.get_player()
-        elif fox is not None and debug:
+        if fox is not None and debug:
             for obj in world:
                 pygame.draw.rect(screen, (255, 0, 0),
                                  obj.get_texture_rect().move(world.cam_x, world.cam_y).to_pygame_rect(), 1)

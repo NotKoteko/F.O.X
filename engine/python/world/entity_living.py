@@ -11,6 +11,7 @@ class EntityLiving(Entity):
         self.is_shifting = False
         self.shifting_time_start = 0
         self.shifting_time_end = 0
+        self.last_attack_time = 0
 
     # Устанавливает направление взгляда
     def set_direction(self, direction):
@@ -18,11 +19,10 @@ class EntityLiving(Entity):
 
     def attack(self, world, target, damage):
         target.get_damage(world, damage)
+        self.last_attack_time = world.world_time
 
     def get_damage(self, world, damage):
         self.hp -= damage
-        if self.hp <= 0:
-            self.kill(world)
 
     def update(self, world, time):
         super().update(world, time)
