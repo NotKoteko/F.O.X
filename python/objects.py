@@ -128,6 +128,7 @@ class FireBall(EntityLiving):
     def __init__(self, world):
         super().__init__(world)
         self.max_speed = 100
+        self.hp = 100
         self.direction = 1
         self.has_collision = False
         self.add_texture("fireball", load_image("fireball_enemy"))
@@ -187,6 +188,7 @@ class FireBoss(FireBall):
     def __init__(self, world):
         super().__init__(world)
         self.hp = 500
+        self.max_speed = 150
         self.add_texture("boss", negative(load_image("fireball_enemy")))
         self.set_texture("boss")
 

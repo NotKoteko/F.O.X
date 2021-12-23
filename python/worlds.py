@@ -65,7 +65,7 @@ class RandomGeneratedWorld(World):
             for obj in self:
                 if isinstance(obj, EntityLiving):
                     if obj.hp <= 0:
-                        if obj == player:
+                        if obj == player or isinstance(obj, FireBoss):
                             return GameOverWorld()
                         obj.kill(self)
         return self
