@@ -131,8 +131,8 @@ class FireBall(EntityLiving):
         self.hp = 100
         self.direction = 1
         self.has_collision = False
-        self.add_texture("fireball", load_image("fireball_enemy"))
-        self.set_texture("fireball")
+        for i in range(1, 5):
+            self.add_texture(f"fireball_{i}", load_image(f"fireball_enemy/fireball_enemy_{i}"))
         self.zone_rect = Rect(0, 0, 1920, 1080)
 
     def update(self, world, time):
@@ -164,6 +164,12 @@ class FireBall(EntityLiving):
                         return False
         return True
 
+    def get_texture(self):
+        texture_number = self.exist_time // 120 % 4
+        texture_key = f"fireball_{texture_number + 1}"
+        texture = self.textures.get(texture_key, self.textures["default"])
+        return texture
+
 
 class WallBush(Bush):
     def __init__(self, world):
@@ -189,8 +195,8 @@ class FireBoss(FireBall):
         super().__init__(world)
         self.hp = 500
         self.max_speed = 150
-        self.add_texture("boss", negative(load_image("fireball_enemy")))
-        self.set_texture("boss")
+        for k, v in self.textures.items():
+            self.textures[k] = negative(v)
 
     def attack(self, world, target, damage):
         super().attack(world, target, damage * 2)
